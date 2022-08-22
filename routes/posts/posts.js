@@ -1,3 +1,4 @@
+const e = require("express");
 const express =require("express");
 const router = express.Router();
 const Post = require("../../models/post.models")
@@ -10,6 +11,32 @@ router.get("/",async (req,resp)=>{
         resp.json({"message : ":err})
     }
 })
+
+router.get("/:id",async (req,resp)=>{
+    try{
+        const post = await Post.findById(req.params.id);
+        resp.json(post);
+    }catch(err){
+        resp.json({"message : ":err})
+    }
+})
+
+router.get("/getPostFromUserId/:userId",async (req,resp)=>{
+    try{
+        const posts = await Post.find();
+        let userPosts = undefined;
+        posts.forEach(async element => {
+            console.log("sdvsdvs");
+            if(req.params.userId == element.userId){
+                userPosts = element;
+            }
+        });
+        resp.json(userPosts);
+    }catch(err){
+        resp.json({"message : ":err})
+    }
+})
+
 
 router.post("/",async(req,resp)=>{
     try{

@@ -15,6 +15,17 @@ router.get("/",async(req,resp)=>{
     }
 })
 
+router.get("/:id",async(req,resp)=>{
+    try{
+        const user = await User.findById(req.params.id);
+        let password = Buffer.from(user.password, 'base64').toString('ascii');  
+        user.password = password;
+        resp.json(user);
+    }catch(err){
+        resp.json({"message : ":err});
+    }
+})
+
 router.get("/login/:email/:password",async(req,resp)=>{
     try{
         const email = req.params.email;
@@ -36,10 +47,7 @@ router.get("/login/:email/:password",async(req,resp)=>{
 router.post("/",async(req,resp)=>{
     const user = new User(req.body);
     try{
-        let password = user.password;
-        let buff = new Buffer(password);
-        let base64Data = buff.toString('base64');
-        user.password = base64Data;
+        user.password = new Buffer(user.password).toString('base64');
         user.phoneNumber = 0+user.phoneNumber;
        const response = await user.save();
        resp.json(response);
@@ -55,8 +63,8 @@ router.put("/:id",async(req,resp)=>{
         user.surName = req.body.surName;
         user.gender = req.body.gender;
         user.dateOfBirth = req.body.dateOfBirth;
-        user.password = Buffer.from(req.body.password,'base64');
-        user.phoneNumber = req.body.phoneNumber;
+        user.password = new Buffer(req.body.password).toString('base64');
+        user.phoneNumber = 0+req.body.phoneNumber;
         user.email = req.body.email;
 
         const update = await user.save(user);
