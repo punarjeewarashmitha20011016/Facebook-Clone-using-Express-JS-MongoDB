@@ -48,4 +48,32 @@ router.post("/",async(req,resp)=>{
     }
 })
 
+router.put("/:id",async(req,resp)=>{
+    try{
+        const user = await User.findById(req.params.id);
+        user.firstName = req.body.firstName;
+        user.surName = req.body.surName;
+        user.gender = req.body.gender;
+        user.dateOfBirth = req.body.dateOfBirth;
+        user.password = Buffer.from(req.body.password,'base64');
+        user.phoneNumber = req.body.phoneNumber;
+        user.email = req.body.email;
+
+        const update = await user.save(user);
+        resp.json(update);
+    }catch(err){
+        resp.json({"message : ":err})
+    }
+});
+
+router.delete("/:id",(req,resp)=>{
+    try{
+        const user = User.findById(req.params.id);
+        const response = user.remove();
+        resp.json(response);
+    }catch(err){
+        resp.json({"message : ":err})
+    }
+})
+
 module.exports = router;
