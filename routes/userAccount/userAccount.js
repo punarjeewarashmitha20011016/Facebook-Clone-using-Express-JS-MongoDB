@@ -66,10 +66,10 @@ router.put("/:id",async(req,resp)=>{
     }
 });
 
-router.delete("/:id",(req,resp)=>{
+router.delete("/:id",async(req,resp)=>{
     try{
-        const user = User.findById(req.params.id);
-        const response = user.remove();
+        const user = await User.findById(req.params.id);
+        const response = await user.remove();
         resp.json(response);
     }catch(err){
         resp.json({"message : ":err})

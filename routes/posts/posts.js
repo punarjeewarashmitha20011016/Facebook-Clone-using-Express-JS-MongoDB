@@ -13,10 +13,36 @@ router.get("/",async (req,resp)=>{
 
 router.post("/",async(req,resp)=>{
     try{
-        const post = await Post.find();
-        resp.json(post);
+        const post = new Post(req.body);
+        const response = await post.save();
+        resp.json(response);
     }catch(err){
         resp.json({"message : ":err})
+    }
+})
+
+router.put("/:id",async(req,resp)=>{
+    try{
+        const post = await Post.findById(req.params.id);
+        post.userId = req.body.userId;
+        post.date = req.body.date;
+        post.time = req.body.time;
+        post.title = req.body.title;
+        post.body = req.body.body;
+        const response = await post.save();
+        resp.json(response);
+    }catch(err){
+        resp.json({"message : ":err})
+    }
+})
+
+router.delete("/:id",async(req,resp)=>{
+    try{
+        const post = await Post.findById(req.params.id);
+        const response = await post.remove()
+        resp.json(response);
+    }catch(err){
+        resp.json(err);
     }
 })
 
