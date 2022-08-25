@@ -26,7 +26,6 @@ router.get("/getPostFromUserId/:userId",async (req,resp)=>{
         const posts = await Post.find();
         let userPosts = undefined;
         posts.forEach(async element => {
-            console.log("sdvsdvs");
             if(req.params.userId == element.userId){
                 userPosts = element;
             }
